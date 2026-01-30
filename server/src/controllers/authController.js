@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import { validateAuthUser } from "../libs/util.js";
+import { validateAuthUser } from "../utils/util.js";
 import User from "../models/User.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto";

@@ -39,7 +39,7 @@ const lastMessageSchema = new mongoose.Schema(
       type: String,
     },
     content: {
-      type: string,
+      type: String,
       default: null,
     },
     senderId: {
@@ -70,6 +70,7 @@ const conversationShema = new mongoose.Schema(
     group: {
       type: groupSchema,
     },
+    // Thời gian message được tạo gần nhất trong conversation nào đó
     lastMessageAt: {
       type: Date,
     },
