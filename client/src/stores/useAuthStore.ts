@@ -31,6 +31,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
         username,
         password,
       );
+
       get().setAccessToken(accessToken);
 
       await get().fetchMe();

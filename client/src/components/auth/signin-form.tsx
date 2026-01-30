@@ -36,7 +36,7 @@ export function SignInForm({
   const onSubmit = async (data: SignInFormValues) => {
     const { username, password } = data;
     await signIn(username, password);
-    navigate("/");
+    // navigate("/");
   };
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
