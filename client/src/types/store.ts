@@ -1,3 +1,4 @@
+import type { Conversation, Message } from "@/types/chat";
 import type { User } from "@/types/user";
 
 export interface AuthState {
@@ -24,4 +25,28 @@ export interface AuthState {
   fetchMe: () => Promise<void>;
 
   refreshToken: () => Promise<void>;
+}
+
+export interface ThemeState {
+  isDark: boolean;
+  toogleThem: () => void;
+  setTheme: (dark: boolean) => void;
+}
+export interface ChatState {
+  conversations: Conversation[];
+  messages: Record<
+    string,
+    {
+      items: Message[];
+      hasMore: boolean;
+      nextCursor?: string | null;
+    }
+  >;
+  activeConversationId: string | null; // lưu id cuộc trò chuyện đang mở
+  loading: boolean;
+  reset: () => void;
+
+  setActiveConversation: (id: string | null) => void;
+
+  fetchConversations: () => Promise<void>;
 }
