@@ -14,7 +14,8 @@ export const useAuthStore = create<AuthState>()(
 
       clearState: () => {
         set({ accessToken: null, user: null, loading: false });
-        localStorage.clear();
+        localStorage.removeItem("auth-storage");
+        localStorage.removeItem("chat-storage");
         useChatStore.getState().reset();
       },
 
@@ -41,7 +42,7 @@ export const useAuthStore = create<AuthState>()(
         try {
           set({ loading: true });
 
-          localStorage.clear();
+          get().clearState();
           useChatStore.getState().reset();
 
           const { accessToken, message } = await authService.signIn(

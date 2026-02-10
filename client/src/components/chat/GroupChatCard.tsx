@@ -8,8 +8,12 @@ import type { Conversation } from "@/types/chat";
 
 const GroupChatCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages } =
-    useChatStore();
+  const {
+    activeConversationId,
+    setActiveConversation,
+    messages,
+    fetchMessages,
+  } = useChatStore();
 
   if (!user) return null;
   const unreadCount = convo.unreadCounts[user._id];
@@ -27,7 +31,7 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
 
     setActiveConversation(id);
     if (!messages[id]) {
-      //  toaosdosaod
+      await fetchMessages(id);
     }
   };
 

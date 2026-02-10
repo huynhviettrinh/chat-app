@@ -6,11 +6,17 @@ import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
+import { useEffect } from "react";
 
 const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const { user } = useAuthStore();
-  const { activeConversationId, setActiveConversation, messages } =
-    useChatStore();
+  const {
+    activeConversationId,
+    setActiveConversation,
+    fetchMessages,
+    messages,
+  } = useChatStore();
+
   if (!user) return null;
 
   const otherUser = convo.participants.find((p) => p._id !== user._id);
@@ -21,11 +27,9 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   const lastMessage = convo.lastMessage?.content ?? "";
 
   const handleSelectConversation = async (id: string) => {
-    console.log(id);
-
     setActiveConversation(id);
     if (!messages[id]) {
-      //  toaosdosaod
+      await fetchMessages(id);
     }
   };
 
@@ -46,9 +50,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
           <UserAvatar
             type="sidebar"
             name={otherUser.displayName ?? ""}
-            avatarUrl={
-              otherUser.avatarUrl ?? "https://github.com/evilrabbit.png"
-            }
+            avatarUrl={otherUser.avatarUrl ?? ""}
           />
           <StatusBadge status="online" />
           {unreadCount > 0 && <UnreadCountBadge unreadCount={unreadCount} />}
@@ -59,7 +61,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
           className={cn(
             "text-sm truncate",
             unreadCount > 0
-              ? "font-medium text-foreground"
+              ? "font-bold text-foreground"
               : "text-muted-foreground",
           )}
         >

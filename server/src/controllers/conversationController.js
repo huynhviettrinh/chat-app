@@ -127,22 +127,22 @@ export const getMessages = async (req, res) => {
     const query = { conversationId };
 
     if (cursor) {
-      query.createAt = { $lt: new Date(cursor) };
+      query.createAt = { $lt: new Date(cursor) }; // lấy thời gian từ cursor trở xuống (tin nhắn quá khứ)
     }
 
-    let message = await Message.find(query)
+    let messages = await Message.find(query)
       .sort({ createdAt: -1 })
       .limit(Number(limit) + 1);
 
     let nextCursor = null;
-    if (message.length > Number(limit)) {
-      const nextMessage = message[message.length - 1];
+    if (messages.length > Number(limit)) {
+      const nextMessage = messages[messages.length - 1];
       nextCursor = nextMessage.createdAt.toISOString();
-      message.pop();
+      messages.pop();
     }
-    message.reverse();
+    messages.reverse();
 
-    return res.status(200).json({ message, nextCursor });
+    return res.status(200).json({ messages, nextCursor });
   } catch (error) {
     console.error("Lỗi khi tạo get Messages", error);
     return res.status(500).json({

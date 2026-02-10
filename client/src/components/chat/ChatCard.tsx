@@ -45,7 +45,7 @@ const ChatCard = ({
           <div className="flex items-center justify-between">
             <h3
               className={cn(
-                "font-semibold text-lg truncate",
+                "font-medium text-lg truncate",
                 unreadCount && unreadCount > 0 && "text-foreground",
               )}
             >
