@@ -30,7 +30,7 @@ export const useChatStore = create<ChatState>()(
           set({ conversations, convoLoading: false });
         } catch (error) {
           console.error(
-            "Lỗi xảy ra tại: fetchConversations [useChatStore.tsx]",
+            "Lỗi xảy ra tại: fetchConversations [useChatStore.ts]",
             error,
           );
           set({ convoLoading: false });
@@ -45,6 +45,7 @@ export const useChatStore = create<ChatState>()(
         if (!convoId) return;
 
         const current = messages?.[convoId];
+
         const nextCursor =
           current?.nextCursor === undefined ? "" : current?.nextCursor;
 
@@ -81,11 +82,56 @@ export const useChatStore = create<ChatState>()(
           });
         } catch (error) {
           console.error(
-            "Lỗi xảy ra tại: fetchMessages [useChatStore.tsx]",
+            "Lỗi xảy ra tại: fetchMessages [useChatStore.ts]",
             error,
           );
         } finally {
           set({ messageLoading: false });
+        }
+      },
+
+      sendDirectMessage: async (recipientId, content, imgUrl) => {
+        try {
+          const { activeConversationId } = get();
+          await chatService.sendDirectMessage(
+            recipientId,
+            content,
+            activeConversationId || undefined,
+            imgUrl,
+          );
+
+          set((state) => ({
+            conversations: state.conversations.map((c) =>
+              c._id === activeConversationId ? { ...c, seenBy: [] } : c,
+            ),
+          }));
+        } catch (error) {
+          console.error(
+            "Lỗi xảy ra tại: sendDirectMessage [useChatStore.ts]",
+            error,
+          );
+        }
+      },
+
+      sendGroupMessage: async (imgUrl, content) => {
+        try {
+          const { activeConversationId } = get();
+          await chatService.sendGroupMessage(
+            imgUrl,
+            content,
+            activeConversationId || undefined,
+          );
+
+          set((state) => ({
+            conversations: state.conversations.map((c) =>
+              c._id === activeConversationId ? { ...c, seenBy: [] } : c,
+            ),
+          }));
+        } catch (error) {
+          console.error(
+            "Lỗi xảy ra tại: sendGroupMessage [useChatStore.ts]",
+            error,
+          );
         }
       },
     }),

@@ -5,11 +5,9 @@ import ChatWindowSkeleton from "@/components/chat/ChatWindowSkeleton";
 import MessageInput from "@/components/chat/MessageInput";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { useChatStore } from "@/stores/useChatStore";
-import { useEffect } from "react";
 
 const ChatWindowLayout = () => {
   const {
-    messages,
     activeConversationId,
     conversations,
     messageLoading: loading,
@@ -34,7 +32,7 @@ const ChatWindowLayout = () => {
         <ChatWindowBody />
       </div>
       {/* Footer */}
-      <MessageInput />
+      <MessageInput selectedConvo={selectConvo} />
     </SidebarInset>
   );
 };

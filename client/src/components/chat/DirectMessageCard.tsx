@@ -14,6 +14,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
     activeConversationId,
     setActiveConversation,
     fetchMessages,
+    fetchConversations,
     messages,
   } = useChatStore();
 
@@ -30,6 +31,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
     setActiveConversation(id);
     if (!messages[id]) {
       await fetchMessages(id);
+      await fetchConversations();
     }
   };
 

@@ -23,4 +23,32 @@ export const chatService = {
       cursor: res.data.nextCursor,
     };
   },
+
+  async sendDirectMessage(
+    recipientId: string,
+    content: string = "",
+    conversationId?: string,
+    imgUrl?: string,
+  ) {
+    const res = await api.post("/messages/direct", {
+      recipientId,
+      content,
+      conversationId,
+      imgUrl,
+    });
+    return res.data.message;
+  },
+
+  async sendGroupMessage(
+    content: string = "",
+    conversationId?: string,
+    imgUrl?: string,
+  ) {
+    const res = await api.post("/messages/group", {
+      content,
+      conversationId,
+      imgUrl,
+    });
+    return res.data.message;
+  },
 };

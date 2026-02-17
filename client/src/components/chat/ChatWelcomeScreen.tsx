@@ -16,7 +16,7 @@ const ChatWelcomeScreen = () => {
 
   return (
     <SidebarInset className="flex w-full h-full bg-transparent">
-      <ChatWindowHeader chat={selectConvo} />
+      <ChatWindowHeader />
       <div className="flex bg-primary-foreground rouneded-2xl flex-1 items-center justify-center">
         <div className="text-center">
           <div

@@ -35,7 +35,6 @@ export const checkFriendship = async (req, res, next) => {
     });
 
     const results = await Promise.all(friendChecks);
-    console.log("results", results);
 
     // Loại bỏ các giá trị falsy (false/null/0/undefined/...)
     const notFriends = results.filter(Boolean);
@@ -79,9 +78,7 @@ export const checkGroupMembership = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.error(
-      "Lỗi middleware checkGroupMembership [checkGroupMembership.js]",
-    );
+    console.error("Lỗi middleware checkGroupMembership [friendMiddleware.js]");
     return res.status(500).json({
       message: "Lỗi hệ thống",
     });

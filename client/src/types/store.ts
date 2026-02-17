@@ -45,6 +45,7 @@ export interface ChatState {
   activeConversationId: string | null; // lưu id cuộc trò chuyện đang mở
   convoLoading: boolean;
   messageLoading: boolean;
+
   reset: () => void;
 
   setActiveConversation: (id: string | null) => void;
@@ -52,4 +53,16 @@ export interface ChatState {
   fetchConversations: () => Promise<void>;
 
   fetchMessages: (conversationId?: string) => Promise<void>;
+
+  sendDirectMessage: (
+    recipientId: string,
+    content: string,
+    imgUrl?: string,
+  ) => Promise<void>;
+
+  sendGroupMessage: (
+    conversationId: string,
+    content: string,
+    imgUrl?: string,
+  ) => Promise<void>;
 }

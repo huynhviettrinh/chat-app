@@ -7,7 +7,7 @@ import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
 import type { Conversation } from "@/types/chat";
 
-const ChatWindowHeader = ({ chat }: { chat: Conversation }) => {
+const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   const { conversations, activeConversationId } = useChatStore();
   const { user } = useAuthStore();
   chat = chat ?? conversations.find((c) => c._id === activeConversationId);
