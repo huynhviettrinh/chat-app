@@ -35,6 +35,7 @@ export function SignInForm({
 
   const onSubmit = async (data: SignInFormValues) => {
     const { username, password } = data;
+
     await signIn(username, password);
     navigate("/");
   };

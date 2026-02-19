@@ -1,5 +1,6 @@
 import type { Conversation, Message } from "@/types/chat";
 import type { User } from "@/types/user";
+import type { Socket } from "socket.io-client";
 
 export interface AuthState {
   accessToken: string | null;
@@ -26,7 +27,6 @@ export interface AuthState {
 
   refreshToken: () => Promise<void>;
 }
-
 export interface ThemeState {
   isDark: boolean;
   toogleThem: () => void;
@@ -65,4 +65,9 @@ export interface ChatState {
     content: string,
     imgUrl?: string,
   ) => Promise<void>;
+}
+export interface SocketState {
+  socket: Socket | null;
+  connectSocket: () => void;
+  disConnectSocket: () => void;
 }
