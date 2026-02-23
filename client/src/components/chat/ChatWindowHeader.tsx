@@ -5,11 +5,14 @@ import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
+import { useSocketStore } from "@/stores/useSocketStore";
 import type { Conversation } from "@/types/chat";
 
 const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
   const { conversations, activeConversationId } = useChatStore();
   const { user } = useAuthStore();
+  const { onlineUsers } = useSocketStore();
+
   chat = chat ?? conversations.find((c) => c._id === activeConversationId);
   if (!chat) {
     return (
@@ -24,7 +27,6 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
     otherUser = otherUsers.length > 0 ? otherUsers[0] : null;
     if (!otherUsers || !user) return;
   }
-
   return (
     <header className="sticky top-0 z-10 flex px-4 py-2 items-center bg-background">
       <div className="flex items-center gap-2 w-full">
@@ -43,7 +45,11 @@ const ChatWindowHeader = ({ chat }: { chat?: Conversation }) => {
                   name={otherUser?.displayName || "Moji"}
                   avatarUrl={otherUser?.avatarUrl || undefined}
                 />
-                <StatusBadge status="online" />
+                <StatusBadge
+                  status={
+                    onlineUsers.includes(otherUser?._id!) ? "online" : "offline"
+                  }
+                />
               </>
             ) : (
               <GroupChatAvatar

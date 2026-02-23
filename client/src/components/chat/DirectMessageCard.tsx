@@ -5,6 +5,7 @@ import UserAvatar from "@/components/chat/UserAvatar";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/stores/useAuthStore";
 import { useChatStore } from "@/stores/useChatStore";
+import { useSocketStore } from "@/stores/useSocketStore";
 import type { Conversation } from "@/types/chat";
 import { useEffect } from "react";
 
@@ -17,7 +18,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
     fetchConversations,
     messages,
   } = useChatStore();
-
+  const { onlineUsers } = useSocketStore();
   if (!user) return null;
 
   const otherUser = convo.participants.find((p) => p._id !== user._id);
@@ -54,7 +55,11 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
             name={otherUser.displayName ?? ""}
             avatarUrl={otherUser.avatarUrl ?? ""}
           />
-          <StatusBadge status="online" />
+          <StatusBadge
+            status={
+              onlineUsers.includes(otherUser?._id!) ? "online" : "offline"
+            }
+          />
           {unreadCount > 0 && <UnreadCountBadge unreadCount={unreadCount} />}
         </>
       }

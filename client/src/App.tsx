@@ -18,8 +18,6 @@ function App() {
   }, [isDark]);
 
   useEffect(() => {
-    console.log(accessToken);
-
     if (accessToken) {
       connectSocket();
     }

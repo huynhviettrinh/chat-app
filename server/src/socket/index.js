@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import { socketAuthMiddleware } from "../middlewares/socketMiddleware.js";
 
 const app = express();
 
@@ -13,11 +14,17 @@ const io = new Server(server, {
   },
 });
 
-io.on("connection", async (socket) => {
-  console.log(`socket connected: ${socket.id}`);
+io.use(socketAuthMiddleware);
 
+const onlineUsers = new Map(); // {userId:socketId}
+
+io.on("connection", async (socket) => {
+  const user = socket.user;
+  onlineUsers.set(user._id, socket.id);
+  io.emit("online-users", Array.from(onlineUsers.keys()));
   socket.on("disconnect", () => {
-    console.log(`socket disconected: ${socket.id}`);
+    onlineUsers.delete(user._id);
+    io.emit("online-users", Array.from(onlineUsers.keys()));
   });
 });
 
