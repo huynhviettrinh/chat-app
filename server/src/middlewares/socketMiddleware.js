@@ -25,7 +25,7 @@ export const socketAuthMiddleware = async (socket, next) => {
     socket.user = user;
     next();
   } catch (error) {
-    console.log(
+    console.error(
       "Lỗi khi verify JWT trong func socketAuthMiddleware [socketMiddleware.js]",
       error,
     );

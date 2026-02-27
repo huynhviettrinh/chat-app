@@ -20,6 +20,7 @@ const MessageItem = ({
   lastMessageStatus,
 }: MessageItemProps) => {
   const prev = messages[index - 1];
+  const next = messages[index + 1];
 
   const isGroupBreak =
     index === 0 ||
@@ -27,7 +28,12 @@ const MessageItem = ({
     // thời gian tin mới nhất và tin sau đó mà lớn hơn 5ph thì tạo mới
     new Date(message.createdAt).getTime() -
       new Date(prev?.createdAt || 0).getTime() >
-      300000;
+      60000;
+
+  const isShowTime =
+    new Date(next?.createdAt).getTime() -
+      new Date(message.createdAt).getTime() >
+      60000 || message.senderId !== next?.senderId;
 
   const paricipant = selectedConvo.participants.find(
     (u) => u._id.toString() === message.senderId.toString(),
@@ -53,6 +59,7 @@ const MessageItem = ({
         </div>
       )}
 
+      {/* Content tin nhắn */}
       <div
         className={cn(
           "max-w-xs lg:max-w-md space-y-0 flex flex-col",
@@ -71,7 +78,7 @@ const MessageItem = ({
         </Card>
 
         {/* Time */}
-        {isGroupBreak && (
+        {isShowTime && (
           <span
             className={cn(
               "text-sm text-muted-foreground px-1",

@@ -113,13 +113,13 @@ export const useChatStore = create<ChatState>()(
         }
       },
 
-      sendGroupMessage: async (imgUrl, content) => {
+      sendGroupMessage: async (conversationId, content, imgUrl?) => {
         try {
           const { activeConversationId } = get();
           await chatService.sendGroupMessage(
-            imgUrl,
             content,
-            activeConversationId || undefined,
+            conversationId || undefined,
+            imgUrl,
           );
 
           set((state) => ({
@@ -133,6 +133,52 @@ export const useChatStore = create<ChatState>()(
             error,
           );
         }
+      },
+
+      addMessage: async (message) => {
+        console.log("addMessage");
+
+        try {
+          const { user } = useAuthStore.getState();
+          const { fetchMessages } = get();
+
+          message.isOwn = message.senderId === user?._id;
+          const convId = message.conversationId;
+
+          let prevItems = get().messages[convId]?.items ?? [];
+
+          if (prevItems.length === 0) {
+            await fetchMessages(convId);
+            prevItems = get().messages[convId]?.items ?? [];
+          }
+
+          set((state) => {
+            if (prevItems.some((m) => m._id === message._id)) {
+              return state;
+            }
+
+            return {
+              messages: {
+                ...state.messages,
+                [convId]: {
+                  items: [...prevItems, message],
+                  hasMore: state.messages[convId].hasMore,
+                  nextCursor: state.messages[convId].nextCursor ?? undefined,
+                },
+              },
+            };
+          });
+        } catch (error) {
+          console.error("Lỗi xảy ra tại: addMessage [useChatStore.ts]", error);
+        }
+      },
+
+      updateConversation: async (conversation) => {
+        set((state) => ({
+          conversations: state.conversations.map((c) =>
+            c._id === conversation._id ? { ...c, ...conversation } : c,
+          ),
+        }));
       },
     }),
 

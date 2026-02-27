@@ -7,9 +7,6 @@ export const sendFriendRequest = async (req, res) => {
     const { to, message } = req.body;
     const from = req.user._id;
 
-    console.log(to);
-    console.log(message);
-
     if (from === to) {
       return res.status(400).json({
         message: "Không thể gửi lời mời kết bạn cho chính mình",
@@ -74,7 +71,6 @@ export const acceptFriendRequest = async (req, res) => {
   try {
     const { requestId } = req.params;
     const userId = req.user._id;
-    console.log(requestId);
 
     const request = await FriendRequest.findById(requestId);
 
