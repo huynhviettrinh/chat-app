@@ -1,5 +1,6 @@
 import Conversation from "../models/Conversation.js";
 import Message from "../models/Message.js";
+import { io } from "../socket/index.js";
 
 export const createConversation = async (req, res) => {
   try {
@@ -76,6 +77,7 @@ export const createConversation = async (req, res) => {
     });
   }
 };
+
 export const getConversations = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -119,6 +121,7 @@ export const getConversations = async (req, res) => {
     });
   }
 };
+
 export const getMessages = async (req, res) => {
   try {
     const { conversationId } = req.params;
@@ -168,5 +171,61 @@ export const getUserConversationsForSocketIO = async (userId) => {
     );
 
     return [];
+  }
+};
+
+export const markAsSeen = async (req, res) => {
+  try {
+    const { conversationId } = req.params;
+    const userId = req.user._id.toString();
+
+    const conversation = await Conversation.findById(conversationId).lean();
+    if (!conversation) {
+      return res.status(404).json({ message: "Không tìm thây conversation" });
+    }
+
+    const lastMessage = conversation.lastMessage;
+
+    if (!lastMessage) {
+      return res
+        .status(200)
+        .json({ message: "Không có tin nhắn để mark as seen" });
+    }
+    if (userId === lastMessage.senderId.toString()) {
+      return res.status(200).json({ message: "Sender không cần mark as seen" });
+    }
+    const updated = await Conversation.findByIdAndUpdate(
+      conversationId,
+      {
+        $addToSet: { seenBy: userId },
+        $set: { [`unreadCounts.${userId}`]: 0 },
+      },
+      {
+        new: true, // trả về dữ liệu đã update
+      },
+    );
+
+    io.to(conversationId).emit("read-message", {
+      conversation: updated,
+      lastMessage: {
+        _id: updated?.lastMessage._id,
+        content: updated?.lastMessage.content,
+        createdAt: updated?.lastMessage.createdAt,
+        senderId: {
+          _id: updated.lastMessage.senderId,
+        },
+      },
+    });
+
+    return res.status(200).json({
+      message: "Marked as seen",
+      seenBy: updated?.seenBy || [],
+      myUnreadCount: updated?.unreadCounts[userId] || 0,
+    });
+  } catch (error) {
+    console.error("Lỗi khi markAsSeen", error);
+    return res.status(500).json({
+      message: "Lỗi hệ thống [func markAsSeen in conversationController]",
+    });
   }
 };
