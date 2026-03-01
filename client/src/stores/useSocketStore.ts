@@ -56,11 +56,26 @@ export const useSocketStore = create<SocketState>((set, get) => ({
           useChatStore.getState().activeConversationId ===
           message.conversationId
         ) {
+          useChatStore.getState().markAsSeen();
         }
 
         useChatStore.getState().updateConversation(updateConversation);
       },
     );
+
+    // read message
+    socket.on("read-message", ({ conversation, lastMessage }) => {
+      console.log("read-message");
+
+      const updated = {
+        _id: conversation._id,
+        lastMessage,
+        lastMessageAt: conversation.lastMessageAt,
+        unreadCounts: conversation.unreadCounts,
+        seenBy: conversation.seenBy,
+      };
+      useChatStore.getState().updateConversation(updated);
+    });
   },
 
   disConnectSocket: () => {
