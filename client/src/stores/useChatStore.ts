@@ -14,6 +14,7 @@ export const useChatStore = create<ChatState>()(
       messageLoading: false,
 
       setActiveConversation: (id) => set({ activeConversationId: id }),
+
       reset: () => {
         set({
           conversations: [],
@@ -23,6 +24,7 @@ export const useChatStore = create<ChatState>()(
           messageLoading: false,
         });
       },
+
       fetchConversations: async () => {
         try {
           set({ convoLoading: true });
@@ -136,8 +138,6 @@ export const useChatStore = create<ChatState>()(
       },
 
       addMessage: async (message) => {
-        console.log("addMessage");
-
         try {
           const { user } = useAuthStore.getState();
           const { fetchMessages } = get();
@@ -179,6 +179,45 @@ export const useChatStore = create<ChatState>()(
             c._id === conversation._id ? { ...c, ...conversation } : c,
           ),
         }));
+      },
+
+      markAsSeen: async () => {
+        try {
+          const { user } = useAuthStore.getState();
+          const { activeConversationId, conversations } = get();
+
+          if (!activeConversationId || !user) {
+            return;
+          }
+
+          const convo = conversations.find(
+            (c) => c._id === activeConversationId,
+          );
+          if (!convo) {
+            return;
+          }
+
+          if ((convo.unreadCounts?.[user._id] ?? 0) === 0) {
+            return;
+          }
+
+          await chatService.markAsSeen(activeConversationId);
+
+          set((state) => {
+            return {
+              conversations: state.conversations.map((c) =>
+                c._id === activeConversationId && c.lastMessage
+                  ? {
+                      ...c,
+                      unreadCounts: { ...c.unreadCounts, [user._id]: 0 },
+                    }
+                  : c,
+              ),
+            };
+          });
+        } catch (error) {
+          console.error("Lỗi xảy ra tại: markAsSeen [useChatStore.ts]", error);
+        }
       },
     }),
 
