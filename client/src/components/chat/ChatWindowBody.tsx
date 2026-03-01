@@ -1,6 +1,7 @@
 import ChatWelcomeScreen from "@/components/chat/ChatWelcomeScreen";
 import MessageItem from "@/components/chat/MessageItem";
 import { useChatStore } from "@/stores/useChatStore";
+import { useEffect, useState } from "react";
 
 const ChatWindowBody = () => {
   const {
@@ -9,12 +10,25 @@ const ChatWindowBody = () => {
     messages: allMessages,
   } = useChatStore();
 
+  const [lastMessageStatus, setLastMessageStatus] = useState<
+    "delivered" | "seen"
+  >("delivered");
+
   const messages = allMessages[activeConversationId!]?.items ?? [];
 
   // lấy ra convo được đang được chọn
   const selectedConvo = conversations.find(
     (c) => c._id === activeConversationId,
   );
+
+  useEffect(() => {
+    const lastMessage = selectedConvo?.lastMessage;
+    if (!lastMessage) return;
+
+    const seenBy = selectedConvo?.seenBy ?? [];
+
+    setLastMessageStatus(seenBy.length > 0 ? "seen" : "delivered");
+  }, [selectedConvo]);
 
   if (!selectedConvo) {
     return <ChatWelcomeScreen />;
@@ -28,8 +42,6 @@ const ChatWindowBody = () => {
     );
   }
 
-  // console.log(messages);
-
   return (
     <div className="p-4 bg-primary-foreground h-full flex flex-col overflow-hidden">
       <div className="flex flex-col h-full overflow-y-auto overflow-x-hidden beautifull-scrollbar">
@@ -41,7 +53,7 @@ const ChatWindowBody = () => {
               index={i}
               messages={messages}
               selectedConvo={selectedConvo}
-              lastMessageStatus="delivered"
+              lastMessageStatus={lastMessageStatus}
             />
           );
         })}
