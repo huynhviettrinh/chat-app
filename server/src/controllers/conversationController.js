@@ -130,7 +130,7 @@ export const getMessages = async (req, res) => {
     const query = { conversationId };
 
     if (cursor) {
-      query.createAt = { $lt: new Date(cursor) }; // lấy thời gian từ cursor trở xuống (tin nhắn quá khứ)
+      query.createdAt = { $lt: new Date(cursor) }; // lấy thời gian từ cursor trở xuống (tin nhắn quá khứ)
     }
 
     let messages = await Message.find(query)
