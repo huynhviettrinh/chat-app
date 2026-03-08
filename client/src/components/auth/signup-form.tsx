@@ -65,9 +65,7 @@ export function SignupForm({
                   <Input type="text" id="lastname" {...register("lastname")} />
                   {/* todo:erro message  */}
                   {errors.lastname && (
-                    <p className="text-destructive text-sm">
-                      {errors.lastname.message}
-                    </p>
+                    <p className="error-message">{errors.lastname.message}</p>
                   )}
                 </div>
                 <div className="space-y-2">
@@ -80,9 +78,7 @@ export function SignupForm({
                     {...register("firstname")}
                   />
                   {errors.firstname && (
-                    <p className="text-destructive text-sm">
-                      {errors.firstname.message}
-                    </p>
+                    <p className="error-message">{errors.firstname.message}</p>
                   )}
                 </div>
               </div>
@@ -93,9 +89,7 @@ export function SignupForm({
                 </label>
                 <Input type="text" id="username" {...register("username")} />
                 {errors.username && (
-                  <p className="text-destructive text-sm">
-                    {errors.username.message}
-                  </p>
+                  <p className="error-message">{errors.username.message}</p>
                 )}
               </div>
               {/* email */}
@@ -111,9 +105,7 @@ export function SignupForm({
                 />
 
                 {errors.email && (
-                  <p className="text-destructive text-sm">
-                    {errors.email.message}
-                  </p>
+                  <p className="error-message">{errors.email.message}</p>
                 )}
               </div>
               {/* password */}
@@ -143,9 +135,7 @@ export function SignupForm({
                 </div>
 
                 {errors.password && (
-                  <p className="text-destructive text-sm">
-                    {errors.password.message}
-                  </p>
+                  <p className="error-message">{errors.password.message}</p>
                 )}
               </div>
 
