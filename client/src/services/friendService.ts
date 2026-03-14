@@ -37,4 +37,9 @@ export const friendService = {
       console.error("Lỗi xảy ra khi declineRequests service", error);
     }
   },
+
+  async getFriendList() {
+    const res = await api.get("/friends");
+    return res.data.friends;
+  },
 };

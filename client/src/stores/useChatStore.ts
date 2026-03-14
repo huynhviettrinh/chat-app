@@ -1,5 +1,6 @@
 import { chatService } from "@/services/chatService";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useSocketStore } from "@/stores/useSocketStore";
 import type { ChatState } from "@/types/store";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
@@ -217,6 +218,41 @@ export const useChatStore = create<ChatState>()(
           });
         } catch (error) {
           console.error("Lỗi xảy ra tại: markAsSeen [useChatStore.ts]", error);
+        }
+      },
+
+      addConvo: (convo) => {
+        set((state) => {
+          const exists = state.conversations.some(
+            (c) => c._id.toString() === convo._id.toString(),
+          );
+
+          return {
+            conversations: exists
+              ? state.conversations
+              : [convo, ...state.conversations],
+            activeConversationId: convo._id,
+          };
+        });
+      },
+
+      createConversation: async (type, name, memberIds) => {
+        try {
+          const conversation = await chatService.createConversation(
+            type,
+            name,
+            memberIds,
+          );
+          get().addConvo(conversation);
+          set({ activeConversationId: conversation._id });
+          useSocketStore
+            .getState()
+            .socket?.emit("join-conversation", conversation._id);
+        } catch (error) {
+          console.error(
+            "Lỗi xảy ra tại: createConversation [useChatStore.ts]",
+            error,
+          );
         }
       },
     }),
