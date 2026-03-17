@@ -58,7 +58,10 @@ export const checkGroupMembership = async (req, res, next) => {
     const { conversationId } = req.body;
     const userId = req.user._id;
 
-    const conversation = await Conversation.findById(conversationId);
+    const conversation = await Conversation.findById(conversationId).populate({
+      path: "lastMessage.senderId",
+      select: "displayName avatarUrl",
+    });
     if (!conversation) {
       return res.status(404).json({
         message: "Không tìm thấy cuộc trò chuyện",

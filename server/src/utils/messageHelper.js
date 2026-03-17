@@ -24,13 +24,19 @@ export const updateConversationAfterCreateMessage = (
   });
 };
 
-export const emitNewMessage = (io, conversation, message) => {
+export const emitNewMessage = (
+  io,
+  conversation,
+  message,
+  displayNameSender,
+) => {
   io.to(conversation._id.toString()).emit("new-message", {
     message,
     conversation: {
       _id: conversation._id,
       lastMessage: conversation.lastMessage,
       lastMessageAt: conversation.lastMessageAt,
+      displayName: displayNameSender,
     },
     unreadCounts: conversation.unreadCounts,
   });

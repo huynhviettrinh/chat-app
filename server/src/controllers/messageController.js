@@ -59,7 +59,7 @@ export const sendGroupMessage = async (req, res) => {
     const { content, conversationId } = req.body;
     const senderId = req.user._id;
     const conversation = req.conversation;
-
+    const displayNameSender = conversation.lastMessage.senderId.displayName;
     if (!content) {
       return res.status(400).json({
         message: "Bạn thiếu content",
@@ -73,7 +73,8 @@ export const sendGroupMessage = async (req, res) => {
     });
     updateConversationAfterCreateMessage(conversation, message, senderId);
     await conversation.save();
-    emitNewMessage(io, conversation, message);
+
+    emitNewMessage(io, conversation, message, displayNameSender);
 
     return res.status(201).json(message);
   } catch (error) {

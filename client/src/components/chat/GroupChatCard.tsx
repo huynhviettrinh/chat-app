@@ -22,9 +22,9 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
   const nameGroup = convo.group?.name ?? "";
   let senderLastMessage;
   if (convo.lastMessage?.senderId._id !== user._id) {
-    senderLastMessage = convo.lastMessage?.senderId.displayName.split(" ")[0];
+    senderLastMessage = convo.lastMessage?.senderId?.displayName?.split(" ")[0];
   } else {
-    senderLastMessage = "Bạn";
+    senderLastMessage = "Bạn: ";
   }
 
   const handleSelectConversation = async (id: string) => {
@@ -63,10 +63,7 @@ const GroupChatCard = ({ convo }: { convo: Conversation }) => {
               : "text-muted-foreground",
           )}
         >
-          {" "}
-          {senderLastMessage}
-          {": "}
-          {lastMessage}
+          {senderLastMessage} {lastMessage}
         </p>
       }
     />
