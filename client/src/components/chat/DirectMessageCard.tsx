@@ -21,7 +21,8 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
   if (!user) return null;
 
   const otherUser = convo.participants.find((p) => p._id !== user._id);
-
+  const checkSender =
+    convo.lastMessage?.senderId._id === user._id ? "Bạn: " : "";
   if (!otherUser) return null;
 
   const unreadCount = convo.unreadCounts[user._id];
@@ -72,6 +73,7 @@ const DirectMessageCard = ({ convo }: { convo: Conversation }) => {
           )}
         >
           {" "}
+          {checkSender}
           {lastMessage}
         </p>
       }

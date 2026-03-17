@@ -75,6 +75,12 @@ export const createConversation = async (req, res) => {
 
     const formatted = { ...conversation.toObject(), participants };
 
+    if (type === "group") {
+      memberIds.forEach((memId) => {
+        io.to(memId).emit("new-group", formatted);
+      });
+    }
+
     return res.status(201).json({
       conversation: formatted,
     });
@@ -212,7 +218,10 @@ export const markAsSeen = async (req, res) => {
       {
         new: true, // trả về dữ liệu đã update
       },
-    );
+    ).populate({
+      path: "lastMessage.senderId",
+      select: "displayName avatarUrl",
+    });
 
     io.to(conversationId).emit("read-message", {
       conversation: updated,
@@ -221,7 +230,8 @@ export const markAsSeen = async (req, res) => {
         content: updated?.lastMessage.content,
         createdAt: updated?.lastMessage.createdAt,
         senderId: {
-          _id: updated.lastMessage.senderId,
+          _id: updated.lastMessage.senderId._id,
+          displayName: updated.lastMessage.senderId.displayName,
         },
       },
     });

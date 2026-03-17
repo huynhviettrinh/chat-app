@@ -1,7 +1,6 @@
 import type { FriendState } from "@/types/store";
 import { friendService } from "@/services/friendService";
 import { create } from "zustand";
-import { useChatStore } from "@/stores/useChatStore";
 import type { Friend } from "@/types/user";
 
 export const useFriendStore = create<FriendState>((set, get) => ({
@@ -85,17 +84,8 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     try {
       set({ loading: true });
       const friends: Friend[] = await friendService.getFriendList();
-      const { conversations } = useChatStore.getState();
 
-      const friendsWithoutConversation = friends.filter((friend) => {
-        return !conversations.some(
-          (convo) =>
-            convo.participants.some((p) => p._id === friend._id) &&
-            convo.type === "direct",
-        );
-      });
-
-      set({ friends: friendsWithoutConversation });
+      set({ friends: friends });
     } catch (error) {
       console.error("Lỗi khi chạy getFriends [useFriendStore.ts]", error);
       set({ friends: [] });

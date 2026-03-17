@@ -42,7 +42,7 @@ export const useSocketStore = create<SocketState>((set, get) => ({
           createdAt: conversationSeleced.lastMessage.createdAt,
           senderId: {
             _id: conversationSeleced.lastMessage.senderId,
-            displayName: "",
+            displayName: conversationSeleced.displayName,
             avatarUrl: null,
           },
         };
@@ -73,6 +73,12 @@ export const useSocketStore = create<SocketState>((set, get) => ({
         seenBy: conversation.seenBy,
       };
       useChatStore.getState().updateConversation(updated);
+    });
+
+    // new group chat
+    socket.on("new-group", (conversation) => {
+      useChatStore.getState().addConvo(conversation);
+      socket.emit("join-conversation", conversation._id);
     });
   },
 

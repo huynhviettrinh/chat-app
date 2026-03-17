@@ -16,12 +16,20 @@ interface StateDialogProps {
 
 const FriendListModal = ({ setStateDialog }: StateDialogProps) => {
   const { friends } = useFriendStore();
-  const { createConversation } = useChatStore();
+  const { createConversation, conversations } = useChatStore();
 
   const handleAddConversation = async (friendId: string) => {
     await createConversation("direct", "", [friendId]);
     setStateDialog(false);
   };
+
+  const friendsWithoutConversation = friends.filter((friend) => {
+    return !conversations.some(
+      (convo) =>
+        convo.participants.some((p) => p._id === friend._id) &&
+        convo.type === "direct",
+    );
+  });
 
   return (
     <DialogContent className="glass max-w-md">
@@ -39,7 +47,7 @@ const FriendListModal = ({ setStateDialog }: StateDialogProps) => {
         </h1>
 
         <div className="space-y-2 max-h-60 overflow-y-auto">
-          {friends.map((friend) => (
+          {friendsWithoutConversation.map((friend) => (
             <Card
               key={friend._id}
               onClick={() => handleAddConversation(friend._id)}
@@ -67,7 +75,7 @@ const FriendListModal = ({ setStateDialog }: StateDialogProps) => {
             </Card>
           ))}
 
-          {friends.length === 0 && (
+          {friendsWithoutConversation.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
               <Users className="size-12 mx-auto mb-3 opacity-50" />
               Chưa có bạn bè.

@@ -45,6 +45,7 @@ export interface ChatState {
   activeConversationId: string | null; // lưu id cuộc trò chuyện đang mở
   convoLoading: boolean;
   messageLoading: boolean;
+  loading: boolean;
 
   reset: () => void;
 
