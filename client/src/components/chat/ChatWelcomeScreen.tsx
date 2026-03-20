@@ -1,19 +1,7 @@
 import ChatWindowHeader from "@/components/chat/ChatWindowHeader";
 import { SidebarInset } from "@/components/ui/sidebar";
-import { useChatStore } from "@/stores/useChatStore";
-import type { Conversation } from "@/types/chat";
 
 const ChatWelcomeScreen = () => {
-  const {
-    messages,
-    activeConversationId,
-    conversations,
-    messageLoading: loading,
-  } = useChatStore();
-
-  const selectConvo =
-    conversations.find((convo) => convo._id === activeConversationId) ?? null;
-
   return (
     <SidebarInset className="flex w-full h-full bg-transparent">
       <ChatWindowHeader />

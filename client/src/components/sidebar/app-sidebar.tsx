@@ -4,6 +4,7 @@ import DirectMessageList from "@/components/chat/DirectMessageList";
 import GroupChatList from "@/components/chat/GroupChatList";
 import NewGroupChatModal from "@/components/chat/NewGroupChatModal";
 import { NavUser } from "@/components/sidebar/nav-user";
+import ConversationSkeleton from "@/components/skeleton/ConversationSkeleton";
 import {
   Sidebar,
   SidebarContent,
@@ -19,13 +20,14 @@ import {
 } from "@/components/ui/sidebar";
 import { Switch } from "@/components/ui/switch";
 import { useAuthStore } from "@/stores/useAuthStore";
+import { useChatStore } from "@/stores/useChatStore";
 import { useThemeStore } from "@/stores/useThemeStore";
 import { Moon, Sun } from "lucide-react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { isDark, toogleThem } = useThemeStore();
   const { user } = useAuthStore();
-
+  const { convoLoading } = useChatStore();
   return (
     <Sidebar variant="inset" {...props}>
       {/* Header */}
@@ -82,7 +84,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </div>
 
           <SidebarGroupContent>
-            <GroupChatList />
+            {convoLoading ? <ConversationSkeleton /> : <GroupChatList />}
           </SidebarGroupContent>
         </SidebarGroup>
         {/* Direct Message */}

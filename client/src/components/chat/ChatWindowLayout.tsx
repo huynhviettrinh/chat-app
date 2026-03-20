@@ -1,8 +1,8 @@
 import ChatWelcomeScreen from "@/components/chat/ChatWelcomeScreen";
 import ChatWindowBody from "@/components/chat/ChatWindowBody";
 import ChatWindowHeader from "@/components/chat/ChatWindowHeader";
-import ChatWindowSkeleton from "@/components/chat/ChatWindowSkeleton";
 import MessageInput from "@/components/chat/MessageInput";
+import ChatWindowSkeleton from "@/components/skeleton/ChatWindowSkeleton";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { useChatStore } from "@/stores/useChatStore";
 import { useEffect } from "react";

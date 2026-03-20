@@ -8,6 +8,9 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import ProfileCard from "@/components/profile/ProfileCard";
 import { useAuthStore } from "@/stores/useAuthStore";
+import PreferencesForm from "@/components/profile/PreferencesForm";
+import PersonalInfoForm from "@/components/profile/PersonalInfoForm";
+import PrivacySettings from "@/components/profile/PrivacySettings";
 
 interface ProfileDialogProps {
   open: boolean;
@@ -52,6 +55,15 @@ const ProfileDialog = ({ open, setOpen }: ProfileDialogProps) => {
                   Bảo Mật
                 </TabsTrigger>
               </TabsList>
+              <TabsContent value="personal">
+                <PersonalInfoForm userInfo={user} />
+              </TabsContent>
+              <TabsContent value="preferences">
+                <PreferencesForm />
+              </TabsContent>
+              <TabsContent value="privacy">
+                <PrivacySettings />
+              </TabsContent>
             </Tabs>
           </div>
         </div>
