@@ -1,5 +1,5 @@
-import SearchForm from "@/components/addFriendModal/SearchForm";
-import SendFriendRequestForm from "@/components/addFriendModal/SendFriendRequestForm";
+import SearchForm from "@/components/AddFriendModal/SearchForm";
+import SendFriendRequestForm from "@/components/AddFriendModal/SendFriendRequestForm";
 import {
   Dialog,
   DialogContent,
