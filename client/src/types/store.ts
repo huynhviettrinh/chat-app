@@ -26,6 +26,8 @@ export interface AuthState {
   fetchMe: () => Promise<void>;
 
   refreshToken: () => Promise<void>;
+
+  setUser: (user: User) => void;
 }
 export interface ThemeState {
   isDark: boolean;
@@ -98,4 +100,8 @@ export interface FriendState {
   acceptRequests: (requestId: string) => Promise<void>;
   declineRequests: (requestId: string) => Promise<void>;
   getFriends: () => Promise<void>;
+}
+export interface UserState {
+  loadingAvatar: boolean;
+  updateAvatarUrl: (formData: FormData) => Promise<void>;
 }

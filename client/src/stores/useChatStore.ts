@@ -31,8 +31,6 @@ export const useChatStore = create<ChatState>()(
         try {
           set({ convoLoading: true });
           const { conversations } = await chatService.fetchConversations();
-          console.log(conversations);
-
           set({ conversations, convoLoading: false });
         } catch (error) {
           console.error(

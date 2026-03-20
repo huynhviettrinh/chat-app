@@ -69,11 +69,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
         {/* Group Chat */}
         <SidebarGroup>
-          <SidebarGroupLabel className="uppercase">Nhom chat</SidebarGroupLabel>
+          <div className="flex items-center justify-between">
+            <SidebarGroupLabel className="uppercase">GROUPS</SidebarGroupLabel>
 
-          <SidebarGroupAction title="Tạo nhóm" className="cursor-pointer">
-            <NewGroupChatModal />
-          </SidebarGroupAction>
+            <SidebarGroupAction
+              title="Tạo nhóm"
+              className="cursor-pointer"
+              asChild
+            >
+              <NewGroupChatModal />
+            </SidebarGroupAction>
+          </div>
 
           <SidebarGroupContent>
             <GroupChatList />
@@ -81,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
         {/* Direct Message */}
         <SidebarGroup>
-          <SidebarGroupLabel className="uppercase">Ban be</SidebarGroupLabel>
+          <SidebarGroupLabel className="uppercase">FRIENDS</SidebarGroupLabel>
 
           <SidebarGroupAction title="Kết bạn" className="cursor-pointer">
             <AddFriendModal />
