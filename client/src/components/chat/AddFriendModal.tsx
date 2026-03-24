@@ -7,6 +7,7 @@ import {
   DialogTrigger,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useAuthStore } from "@/stores/useAuthStore";
 import { useFriendStore } from "@/stores/useFriendStore";
 import type { User } from "@/types/user";
 import { UserPlus } from "lucide-react";
@@ -24,6 +25,8 @@ const AddFriendModal = () => {
   const [searchUser, setSearchUser] = useState<User>();
   const [searchedUsername, setSearchedUsername] = useState("");
   const { loading, searchByUsername, addFriend } = useFriendStore();
+  const { user } = useAuthStore();
+
   const [open, setOpen] = useState(false);
 
   const {
@@ -44,6 +47,10 @@ const AddFriendModal = () => {
   const handleSearch = handleSubmit(async (data) => {
     const username = data.username.trim();
     if (!username) return;
+    if (username === user?.username.trim()) {
+      toast.error("Không thể kết bạn với mình!");
+      return;
+    }
     setIsFound(null);
     setSearchedUsername(username);
     try {
@@ -63,8 +70,7 @@ const AddFriendModal = () => {
   const handleSend = handleSubmit(async (data) => {
     if (!searchUser) return;
     try {
-      const message = await addFriend(searchUser._id, data.message);
-      toast.success(message);
+      await addFriend(searchUser._id, data.message);
       reset();
       handleCancel();
     } catch (error) {

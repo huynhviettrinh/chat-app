@@ -95,11 +95,12 @@ export interface FriendState {
   receivedList: FriendRequest[];
   sentList: FriendRequest[];
   searchByUsername: (username: string) => Promise<User | null>;
-  addFriend: (to: string, message?: string) => Promise<string>;
+  addFriend: (to: string, message?: string) => Promise<void>;
   getAllFriendRequests: () => Promise<void>;
   acceptRequests: (requestId: string) => Promise<void>;
   declineRequests: (requestId: string) => Promise<void>;
   getFriends: () => Promise<void>;
+  updateReceivedList: (friendReq: FriendRequest) => void;
 }
 export interface UserState {
   loadingAvatar: boolean;

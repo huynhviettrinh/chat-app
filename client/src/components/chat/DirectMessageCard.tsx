@@ -1,5 +1,5 @@
 import ChatCard from "@/components/chat/ChatCard";
-import StatusBadge from "@/components/chat/StatusBadge";
+import StatusBadge from "@/components/badge/StatusBadge";
 import UnreadCountBadge from "@/components/chat/UnreadCountBadge";
 import UserAvatar from "@/components/chat/UserAvatar";
 import { cn } from "@/lib/utils";

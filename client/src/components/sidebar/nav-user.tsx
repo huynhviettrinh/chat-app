@@ -21,11 +21,14 @@ import Logout from "@/components/auth/Logout";
 import { useState } from "react";
 import FriendRequestDialog from "@/components/friendRequest/FriendRequestDialog";
 import ProfileDialog from "@/components/profile/ProfileDialog";
+import NotificationBadge from "@/components/badge/NotificationBadge";
+import { useFriendStore } from "@/stores/useFriendStore";
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
   const [friendRequestOpen, setFriendRequestOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const { receivedList } = useFriendStore();
 
   return (
     <>
@@ -38,12 +41,19 @@ export function NavUser({ user }: { user: User }) {
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
               >
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatarUrl} alt={user.displayName} />
-                  <AvatarFallback className="rounded-lg">
-                    {user.username.charAt(0)}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative">
+                  <Avatar className="h-8 w-8 rounded-lg">
+                    <AvatarImage src={user.avatarUrl} alt={user.displayName} />
+                    <AvatarFallback className="rounded-lg">
+                      {user.username.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+
+                  {receivedList.length > 0 && (
+                    <NotificationBadge numb={receivedList.length} />
+                  )}
+                </div>
+
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">
                     {user.displayName}
@@ -84,6 +94,9 @@ export function NavUser({ user }: { user: User }) {
                 <DropdownMenuItem onClick={() => setFriendRequestOpen(true)}>
                   <Bell className="text-muted-foreground dark:group-focus:text-accent-foreground!" />
                   Thông báo
+                  {receivedList.length > 0 && (
+                    <NotificationBadge numb={receivedList.length} />
+                  )}
                 </DropdownMenuItem>
               </DropdownMenuGroup>
 

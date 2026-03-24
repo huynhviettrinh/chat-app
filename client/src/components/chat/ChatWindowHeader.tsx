@@ -1,5 +1,5 @@
 import GroupChatAvatar from "@/components/chat/GroupChatAvatar";
-import StatusBadge from "@/components/chat/StatusBadge";
+import StatusBadge from "@/components/badge/StatusBadge";
 import UserAvatar from "@/components/chat/UserAvatar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";

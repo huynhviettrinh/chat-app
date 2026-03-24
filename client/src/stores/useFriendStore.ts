@@ -2,6 +2,7 @@ import type { FriendState } from "@/types/store";
 import { friendService } from "@/services/friendService";
 import { create } from "zustand";
 import type { Friend } from "@/types/user";
+import { toast } from "sonner";
 
 export const useFriendStore = create<FriendState>((set, get) => ({
   friends: [],
@@ -26,10 +27,10 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     try {
       set({ loading: true });
       const resultMessage = await friendService.sendFriendRequest(to, message);
-      return resultMessage;
-    } catch (error) {
+      toast.success(resultMessage.data.message);
+    } catch (error: any) {
       console.error("Lỗi khi chạy addFriend [useFriendStore.ts]", error);
-      return "Lỗi khi gửi kết bạn. Hãy thử lại";
+      toast.error(error.response.data.message);
     } finally {
       set({ loading: false });
     }
@@ -92,5 +93,12 @@ export const useFriendStore = create<FriendState>((set, get) => ({
     } finally {
       set({ loading: false });
     }
+  },
+  updateReceivedList(friendReq) {
+    set((state) => {
+      return {
+        receivedList: [friendReq, ...state.receivedList],
+      };
+    });
   },
 }));

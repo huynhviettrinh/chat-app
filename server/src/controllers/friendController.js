@@ -1,6 +1,7 @@
 import Friend from "../models/Friend.js";
 import FriendRequest from "../models/FriendRequest.js";
 import User from "../models/User.js";
+import { io } from "../socket/index.js";
 
 export const sendFriendRequest = async (req, res) => {
   try {
@@ -31,7 +32,7 @@ export const sendFriendRequest = async (req, res) => {
     const [alreadyFriends, existingRequest] = await Promise.all([
       Friend.findOne({ userA, userB }),
       FriendRequest.findOne({
-        or: [
+        $or: [
           { from, to },
           { from: to, to: from },
         ],
@@ -45,20 +46,33 @@ export const sendFriendRequest = async (req, res) => {
     }
 
     if (existingRequest) {
-      return res.status({
+      return res.status(400).json({
         message: "Đã có lời mời kết bạn đang chờ",
       });
     }
 
-    const resquest = await FriendRequest.create({
+    const request = await FriendRequest.create({
       from,
       to,
       message,
     });
 
+    await request.populate([
+      {
+        path: "to",
+        select: "_id username displayName avatarUrl",
+      },
+      {
+        path: "from",
+        select: "_id username displayName avatarUrl",
+      },
+    ]);
+
+    io.to(to).emit("friend-request", request);
+
     return res.status(200).json({
       message: "Gửi lời mời kết bạn thành công",
-      resquest,
+      request,
     });
   } catch (error) {
     console.error("Lỗi khi gửi kết bạn", error);
